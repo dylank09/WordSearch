@@ -86,7 +86,7 @@ public class WordSearchPuzzle {
 		
 	}
 	
-	private char randomDirection() {
+	private char randomDirection() {                     //method to pick a random direction
 		int r = (int)(Math.random()*4);
 		switch (r) {
 		case 0: return 'U';
