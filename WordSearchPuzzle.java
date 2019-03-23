@@ -10,32 +10,60 @@ public class WordSearchPuzzle {
 	
 	public WordSearchPuzzle(List<String> userSpecifiedWords) {
 		
-		int n = userSpecifiedWords.size();
-		if(n < 1) {
-			puzzle = new char[0][0];
-			System.out.println("Error: List is empty");
-		}
-		else {
-			int characterSum = 0, wordLength, sq;
-			for(int i = 0; i < n; i++) {                 //loop sums the number of characters in list 
-				wordLength = userSpecifiedWords.get(i).length();  //wordLength takes the length of the word in the arraylist at position i
-				characterSum += wordLength;              //adds on the length of the word in the arraylist at position i
-			}
-			characterSum *= scale;                          //multiplies sum of characters by the scale factor
-			sq =  (int) Math.ceil(Math.sqrt(characterSum)); //rounds up the square root of the sum of the lengths of the words in the list
-			puzzle = new char[sq][sq];                      //creates the 2d array 
+	    int n = userSpecifiedWords.size();
+	    if(n < 1) {
+	        puzzle = new char[0][0];
+	        System.out.println("Error: List is empty");
+	       }
+	       else {
+	           int characterSum = 0, wordLength, sq;
+	           for(int i = 0; i < n; i++) {                 //loop sums the number of characters in list 
+	               wordLength = userSpecifiedWords.get(i).length();  //wordLength takes the length of the word in the arraylist at position i
+	               characterSum += wordLength;              //adds on the length of the word in the arraylist at position i
+	           }
+	           characterSum *= scale;                          //multiplies sum of characters by the scale factor
+	           sq =  (int) Math.ceil(Math.sqrt(characterSum)); //rounds up the square root of the sum of the lengths of the words in the list
+	           puzzle = new char[sq][sq];                      //creates the 2d array 
+	           
+	       }
+	   }
 	
-			}
-		}
-	
-	public WordSearchPuzzle(String wordFile, int wordCount, int shortest, int longest) {
-		
+       	public WordSearchPuzzle(String wordFile, int wordCount, int shortest, int longest) {
+        	this(readWordsFromFile(wordFile, wordCount, shortest, longest));   //this statement had to be the first statement in the constructor to compile
 	}
 	
+	private static ArrayList<String> readWordsFromFile(String wordFile, int wordCount, int shortest, int longest) {  //private method to make the arraylist of words from the file
+	    ArrayList<String> words = new ArrayList<String>(); 
+	    try {
+	        FileReader fr = new FileReader(wordFile);    //create file reader
+	        BufferedReader br = new BufferedReader(fr);  //create buffer reader
+	        String line;
+	        int len,i = 0;
+                line = br.readLine() ;             //read first line
+                while (line != null && i < wordCount) {         //words in the file must each be on a new line in order to be added to the arraylist
+                    len = line.length();                                                            //loop will only iterate wordCount times or until no more words
+                    if((len >= shortest && len <= longest)) {
+                        words.add(line.toUpperCase());          //only add the word to the arraylist if it's length is within range shortest - longest
+                        System.out.println(line);
+                        i++;
+                    }
+                    line = br.readLine();
+	        }
+	        
+	        br.close();     //close buffer reader
+	        fr.close();     //close file reader
+	        return words;   
+	    }
+	    catch(IOException x) {  //basically: if any error then return null
+	    	return null;
+	    }
+	}
+	
+	
 	public void fillUnused() {
-    	if(puzzle.length != 0) {
-			int n,col;
-    		String alphabet = "abcdefghijklmnopqrstuvwyxz";
+    	   if(puzzle.length != 0) {
+		int n,col;
+    		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWYXZ";
         	for(int row = 0; row < puzzle.length; row++) {
         		for(col = 0; col< puzzle[0].length; col++) {
         			if(puzzle[row][col] == '\0') {                    //checks if the array element is null
@@ -44,16 +72,16 @@ public class WordSearchPuzzle {
         			}
         		}
         	}
-		}
-    }
+           }
+        }
 	
 	public void display() {
-    	if(puzzle.length != 0) {
+    	   if(puzzle.length != 0) {
 			int j;
     		System.out.print("   ");
     		for(int k = 0; k < puzzle[0].length; k++) {
     			System.out.printf("%d\t ", k);           //prints out the index numbers for columns
-    		}
+                }
     		System.out.printf("\n");
     	
     		for(int i = 0; i < puzzle.length; i++) {
@@ -63,19 +91,19 @@ public class WordSearchPuzzle {
         		}
         		System.out.printf("\n");
         	}
-    	}
-    }
+           }
+        }
 	
 	public List<String> getWordSearchList() {
-		
+		return null;
 	}
 	
 	public char[][] getPuzzleAsGrid() {
-		
+		return null;
 	}
 	
 	public String getPuzzleAsString() {
-		
+		return null;
 	}
 	
 	public void showWordSearchPuzzle(boolean hide) {
@@ -86,7 +114,7 @@ public class WordSearchPuzzle {
 		
 	}
 	
-	private char randomDirection() {                     //method to pick a random direction
+	private char randomDirection() {          //method to pick a random direction
 		int r = (int)(Math.random()*4);
 		switch (r) {
 		case 0: return 'U';
