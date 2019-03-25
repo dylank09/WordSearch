@@ -1,2 +1,2 @@
 # WordSearch
-CS4222 project
+CS4222 assignment
