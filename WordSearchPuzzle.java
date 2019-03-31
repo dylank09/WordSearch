@@ -1,12 +1,14 @@
 import java.util.*;
 import java.io.*;
-import java.math.*;
-import java.lang.*;
+//import java.math.*;
+//import java.lang.*;
 
 public class WordSearchPuzzle {
     private char[][] puzzle;
     private List<String> puzzleWords;
     private double scale = 1.75;
+    private int[][] answerLocations;
+    private char[] answerDirections;
     
     public WordSearchPuzzle(List<String> userSpecifiedWords) {
         
@@ -23,8 +25,10 @@ public class WordSearchPuzzle {
                }
                characterSum *= scale;                          //multiplies sum of characters by the scale factor
                sq =  (int) Math.ceil(Math.sqrt(characterSum)); //rounds up the square root of the sum of the lengths of the words in the list
-               puzzle = new char[sq][sq];                      //creates the 2d array 
-               
+               this.puzzle = new char[sq][sq];                      //creates the 2d array 
+               this.answerLocations = new int[2][n];
+               this.answerDirections = new char[n];
+               this.puzzleWords = new ArrayList(userSpecifiedWords);
            }
     }
     
@@ -44,7 +48,7 @@ public class WordSearchPuzzle {
                     len = line.length();                                                            //loop will only iterate wordCount times or until no more words
                     if((len >= shortest && len <= longest)) {
                         words.add(line.toUpperCase());          //only add the word to the arraylist if it's length is within range shortest - longest
-                        System.out.println(line);
+                        //System.out.println(line);
                         i++;
                     }
                     line = br.readLine();
@@ -81,38 +85,95 @@ public class WordSearchPuzzle {
             int j;
             System.out.print("   ");
             for(int k = 0; k < puzzle[0].length; k++) {
-                System.out.printf("%d\t ", k);           //prints out the index numbers for columns
+                System.out.printf("%d  ", k);           //prints out the index numbers for columns
                 }
             System.out.printf("\n");
         
             for(int i = 0; i < puzzle.length; i++) {
                 System.out.printf("%d ", i);             //prints out the index numbers for rows
                 for(j = 0; j < puzzle[0].length; j++) {
-                    System.out.printf(" %c\t", puzzle[i][j]); //prints each element in the array
+                    System.out.printf(" %c ", puzzle[i][j]); //prints each element in the array
                 }
                 System.out.printf("\n");
             }
+            System.out.printf("\n");
          }
     }
     
     public List<String> getWordSearchList() {
-        return null;
+        return puzzleWords;
     }
     
     public char[][] getPuzzleAsGrid() {
-        return null;
+        return puzzle;
     }
     
     public String getPuzzleAsString() {
-        return null;
+        String puzzleString = "";
+        int col;
+        for(int row = 0; row < puzzle.length; row++) {
+            for(col = 0; col < puzzle[row].length; col++) {
+                puzzleString += puzzle[row][col];
+                
+            }
+            puzzleString += "\n";
+        }
+        return puzzleString.toString();
+        
     }
     
     public void showWordSearchPuzzle(boolean hide) {
-        
+        if(hide) display();
+        else {
+            display();
+            for(int i = 0; i < puzzleWords.size(); i++) {
+                System.out.printf("\n%s [%d][%d] %c\n", puzzleWords.get(i), 
+                                    answerLocations[0][i], answerLocations[1][i], 
+                                    answerDirections[i]);
+            }
+        }
     }
     
     public void generateWordSearchPuzzle() {
-        
+        int row, col, len, sq = puzzle.length;
+        String word;
+        char dir; 
+        for(int i = 0; i < puzzleWords.size(); ) {
+            word = puzzleWords.get(i).toUpperCase();
+            row = (int)(Math.random() * sq);
+            col = (int)(Math.random() * sq);
+            dir = randomDirection();
+            if(spaceForWord(word, row, col, dir)){
+                len = word.length();
+                answerLocations[0][i] = col;
+                answerLocations[1][i] = row;
+                switch(dir)  {   
+                    case 'U': for(int j = 0; j < len; j++){             
+                                puzzle[row-j][col] = word.charAt(j);
+                                answerDirections[i] = dir;
+                    }
+                        break;
+                    case 'D': for(int j = 0; j < len; j++){
+                                puzzle[row+j][col] = word.charAt(j);
+                                answerDirections[i] = dir;
+                    }
+                        break;
+                    case 'R': for(int j = 0; j < len; j++){
+                                puzzle[row][col+j] = word.charAt(j);
+                                answerDirections[i] = dir;
+                    } 
+                        break;
+                    case 'L': for(int j = 0; j < len; j++){
+                                puzzle[row][col-j] = word.charAt(j);
+                                answerDirections[i] = dir;
+                    }
+                        break;
+                    default: 
+                }
+                i++;
+            }
+        }
+        fillUnused();
     }
     
     private char randomDirection() {          //method to pick a random direction
@@ -175,12 +236,12 @@ public class WordSearchPuzzle {
         List<String> al = new ArrayList<String>();
         al.add("add");
         al.add("fade");
+        al.add("dylan");
+        al.add("hello");
         WordSearchPuzzle ws = new WordSearchPuzzle(al);
-        ws.fillUnused();
+        ws.generateWordSearchPuzzle();
         ws.display();
-        System.out.println(ws.spaceForWord("aa", 3, 2, 'D'));
-        //System.out.println(ws.randomDirection());
-        
+        ws.showWordSearchPuzzle(false);
     }
 
 }
