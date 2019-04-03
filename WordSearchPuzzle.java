@@ -38,29 +38,40 @@ public class WordSearchPuzzle {
     
     private static ArrayList<String> readWordsFromFile(String wordFile, int wordCount, int shortest, int longest) {  //private method to make the arraylist of words from the file
         ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> fileWords = new ArrayList<String>();
         try {
             FileReader fr = new FileReader(wordFile);    //create file reader
             BufferedReader br = new BufferedReader(fr);  //create buffer reader
-            String line;
-            int len, i = 0;
-                line = br.readLine() ;             //read first line
-                while (line != null && i < wordCount) {         //words in the file must each be on a new line in order to be added to the arraylist
+            String line, word;
+            int len, i = 0, r;
+            line = br.readLine() ;             //read first line
+                while (line != null) { //&& i < wordCount) {         //words in the file must each be on a new line in order to be added to the arraylist
                     len = line.length();                                                            //loop will only iterate wordCount times or until no more words
                     if((len >= shortest && len <= longest)) {
-                        words.add(line.toUpperCase());          //only add the word to the arraylist if it's length is within range shortest - longest
+                        fileWords.add(line.toUpperCase());          //only add the word to the arraylist if it's length is within range shortest - longest
                         //System.out.println(line);
-                        i++;
+                        //i++;
                     }
                     line = br.readLine();
             }
             
-            Collections.shuffle(words);
+            for(; i < wordCount; ) {
+                r = (int)(Math.random()*fileWords.size());
+                word = fileWords.get(r);
+                if(!(words.contains(word))) {
+                    words.add(word);
+                    i++;
+                }
+            }
+            
+            //Collections.shuffle(words);
             br.close();     //close buffer reader
             fr.close();     //close file reader
             return words;   
         }
-        catch(IOException x) {  //basically: if any error then return null
-            return null;
+        catch(IOException x) {  //basically: if any error then return the arraylist from a list generated using this method...
+            return readWordsFromFile("default.txt", 10, 2, 8);
+            //return null;
         }
     }
     
@@ -238,7 +249,7 @@ public class WordSearchPuzzle {
         al.add("fade");
         al.add("dylan");
         al.add("hello");
-        WordSearchPuzzle ws = new WordSearchPuzzle(al);
+        WordSearchPuzzle ws = new WordSearchPuzzle("wordsfile.txt", 12, 3, 7);
         ws.generateWordSearchPuzzle();
         ws.display();
         ws.showWordSearchPuzzle(false);
