@@ -12,8 +12,8 @@ public class WordSearchPuzzle {
     private char[][] puzzle;
     private List<String> puzzleWords;
     private double scale = 1.75;      
-    private int[][] answerLocations;  //will store the starting positions of the puzzle words when put into 2d array
     private char[] answerDirections;  //will store the direction of puzzle words on entry to the puzzle 2d arrray
+    private HashMap<String, List<Integer>> answerPos;
     
     public WordSearchPuzzle(List<String> userSpecifiedWords) {
         
@@ -30,10 +30,10 @@ public class WordSearchPuzzle {
                }
                characterSum *= scale;                          //multiplies sum of characters by the scale factor
                sq =  (int) Math.ceil(Math.sqrt(characterSum)); //rounds up the square root of the sum of the lengths of the words in the list
-               this.puzzle = new char[sq][sq];                  
-               this.answerLocations = new int[2][n];           
+               this.puzzle = new char[sq][sq];                      
                this.answerDirections = new char[n];
                this.puzzleWords = new ArrayList(userSpecifiedWords);
+               this.answerPos = new HashMap<String, List<Integer>>();
            }
     }
     
@@ -137,10 +137,12 @@ public class WordSearchPuzzle {
     
     public void showWordSearchPuzzle(boolean hide) {
         if(!hide) {   //if hide is false
+            String word;
             display();  //display the puzzle
             for(int i = 0; i < puzzleWords.size(); i++) {
-                System.out.printf("\n%s [%d][%d] %c\n", puzzleWords.get(i), 
-                                    answerLocations[0][i], answerLocations[1][i], 
+                word = puzzleWords.get(i);
+                System.out.printf("\n%s [%d][%d] %c\n", word, 
+                                    answerPos.get(word).get(0), answerPos.get(word).get(1),
                                     answerDirections[i]);  //show each word and its answer position and direction
             }
         }
@@ -158,8 +160,10 @@ public class WordSearchPuzzle {
             dir = randomDirection();          //random direction
             if(spaceForWord(word, row, col, dir)){
                 len = word.length();  
-                answerLocations[0][i] = col;         //fill in the 2d array with where the word is placed
-                answerLocations[1][i] = row;
+                ArrayList<Integer> al = new ArrayList<Integer>(2);
+                al.add(col);
+                al.add(row);
+                answerPos.put(word, al);
                 switch(dir)  {   
                     case 'U': for(int j = 0; j < len; j++){             
                                 puzzle[row-j][col] = word.charAt(j);  //puts in character of the word
