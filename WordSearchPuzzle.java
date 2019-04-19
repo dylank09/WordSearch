@@ -1,29 +1,30 @@
 import java.util.*;
 import java.io.*;
 
-/*
+/***************************
  * authors
- * Dylan Kearney 18227023
- * Cyiaph McCann 17233453
- * Emmet Browne 18238637
- * Athul Shabu 18256155
- */
+ * 
+ * Student Names:      ID:
+ * Dylan Kearney    18227023
+ * Cyiaph McCann    17233453
+ * Emmet Browne     18238637
+ * Athul Shabu      18256155
+ * 
+ * Group Members: 4
+ ***************************/
 
 public class WordSearchPuzzle {
     private char[][] puzzle;
-    private List<String> puzzleWords;
-    private double scale = 1.75;      
+    private List<String> puzzleWords;    
     private char[] answerDirections;  //will store the direction of puzzle words on entry to the puzzle 2d arrray
     private HashMap<String, List<Integer>> answerPos;
     
     public WordSearchPuzzle(List<String> userSpecifiedWords) {    
+        double scale = 1.75;
         boolean empty = false;
-        if(userSpecifiedWords == null) {
-            empty = true;
-        }
-        else if(userSpecifiedWords.isEmpty()) {
-            empty = true;
-        }
+        if(userSpecifiedWords == null) empty = true;
+        else if(userSpecifiedWords.isEmpty()) empty = true;
+        
         if(empty) {
             puzzle = new char[0][0];     //makes 2d array 0x0 if list is empty
             System.out.println("Error: List is empty");
@@ -273,20 +274,4 @@ public class WordSearchPuzzle {
         }
         return count == len;
     }
-    
-    /*
-    public static void main(String[] args) {
-        
-        List<String> al = new ArrayList<String>();
-        al.add("add");
-        al.add("fade");
-        al.add("dylan");
-        al.add("hello");
-        WordSearchPuzzle ws = new WordSearchPuzzle("wordsfile.txt", 12, 3, 7);
-        ws.generateWordSearchPuzzle();
-        ws.display();
-        ws.showWordSearchPuzzle(false);
-    }
-    */
-
 }
