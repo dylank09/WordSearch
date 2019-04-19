@@ -1,12 +1,16 @@
 import java.util.*;
 
-/*
+/****************************
  * authors
- * Dylan Kearney 18227023
- * Cyiaph McCann 17233453
- * Emmet Browne 18238637
- * Athul Shabu 18256155
- */
+ * 
+ * Student Names:      ID:
+ * Dylan Kearney    18227023
+ * Cyiaph McCann    17233453
+ * Emmet Browne     18238637
+ * Athul Shabu      18256155
+ * 
+ * Group Members: 4
+ ***************************/
 
 public class Driver {
     public static void main(String[] args) {
